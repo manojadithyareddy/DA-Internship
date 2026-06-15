@@ -249,3 +249,171 @@ SELECT
     AVG(Profit) AS Avg_Profit
 FROM orders
 GROUP BY Category;
+
+SELECT COUNT(*) FROM ORDERS;
+
+SELECT * FROM ORDERS;
+
+SELECT *
+FROM ORDERS
+WHERE DISCOUNT > 0.30
+ORDER BY DISCOUNT DESC;
+
+SELECT COUNT(*) as HIGH_DISCOUNT_ORDERS
+FROM ORDERS
+WHERE DISCOUNT > 0.30
+ORDER BY DISCOUNT DESC; 
+
+SELECT Avg(profit) as AVG_LOSS_PER_ORDER
+FROM ORDERS;
+
+SELECT Avg(profit) as AVG_LOSS_PER_ORDER
+FROM ORDERS
+WHERE DISCOUNT > 0.30
+	AND PROFIT < 0;
+    
+SELECT COUNT(*) AS LOSS_ORDERS,
+	SUM(PROFIT) AS TOTAL_LOSS
+FROM ORDERS
+WHERE DISCOUNT > 0.30
+	AND PROFIT < 0;
+    
+SELECT PRODUCT_NAME,
+	SUM(PROFIT) AS TOTAL_PROFIT,
+    SUM(SALES) AS TOTAL_SALES,
+    AVG(DISCOUNT) AS AVG_DISCOUNT
+FROM ORDERS
+GROUP BY PRODUCT_NAME
+HAVING SUM(PROFIT) < 0
+ORDER BY TOTAL_PROFIT
+LIMIT 10;
+
+SELECT * FROM ORDERS;
+
+SELECT REGION,
+	SUM(SALES) AS TOTAL_SALES,
+    SUM(PROFIT) AS TOTAL_PROFIT
+FROM ORDERS
+GROUP BY REGION;
+
+SELECT REGION,
+	SUM(SALES) AS TOTAL_SALES,
+    SUM(PROFIT) AS TOTAL_PROFIT,
+    ROUND((SUM(PROFIT)/SUM(SALES))*100,2) AS PROFIT_MARGIN_PCT
+FROM ORDERS
+GROUP BY REGION;
+
+SELECT REGION,
+	SUM(SALES) AS TOTAL_SALES,
+    SUM(PROFIT) AS TOTAL_PROFIT,
+    ROUND((SUM(PROFIT)/SUM(SALES))*100,2) AS PROFIT_MARGIN_PCT,
+    RANK()OVER(ORDER BY ROUND((SUM(PROFIT)/SUM(SALES))*100,2) DESC) AS REGION_RANK
+FROM ORDERS
+GROUP BY REGION;
+
+SELECT REGION,
+	SUM(SALES) AS TOTAL_SALES,
+    SUM(PROFIT) AS TOTAL_PROFIT,
+    ROUND((SUM(PROFIT)/SUM(SALES))*100,2) AS PROFIT_MARGIN_PCT,
+    dense_rank
+    ()OVER(ORDER BY ROUND((SUM(PROFIT)/SUM(SALES))*100,2) DESC) AS REGION_DENSERANK
+FROM ORDERS
+GROUP BY REGION;
+
+SELECT REGION,
+	SUM(SALES) AS TOTAL_SALES,
+    SUM(PROFIT) AS TOTAL_PROFIT,
+    ROUND((SUM(PROFIT)/SUM(SALES))*100,2) AS PROFIT_MARGIN_PCT,
+    dense_rank
+    ()OVER(ORDER BY ROUND((SUM(PROFIT)/SUM(SALES))*100,2) DESC) AS performance_RANK
+FROM ORDERS
+GROUP BY REGION;
+
+SELECT
+    Order_ID,
+    Ship_Mode,
+    Order_Date_latest,
+    Ship_Date_latest,
+    DATEDIFF(Ship_Date_latest, Order_Date_latest) AS Shipping_Delay_Days
+FROM orders;
+
+SELECT
+    Ship_Mode,
+    ROUND(AVG(DATEDIFF(Ship_Date_latest, Order_Date_latest)),2) AS Avg_Delay_Days
+FROM orders
+GROUP BY Ship_Mode
+ORDER BY Avg_Delay_Days;
+
+SELECT
+    Ship_Mode,
+    COUNT(*) AS Total_Orders,
+    ROUND(AVG(DATEDIFF(Ship_Date_latest, Order_Date_latest)),2) AS Avg_Delay_Days,
+    SUM(Sales) AS Total_Sales
+FROM orders
+GROUP BY Ship_Mode
+ORDER BY Avg_Delay_Days;
+
+SELECT
+    Ship_Mode,
+    ROUND(AVG(DATEDIFF(Ship_Date_latest, Order_Date_latest)),2) AS Avg_Delay_Days,
+    SUM(Sales) AS Total_Sales,
+    SUM(Profit) AS Total_Profit,
+    ROUND((SUM(Profit)/SUM(Sales))*100,2) AS Profit_Margin_Pct
+FROM orders
+GROUP BY Ship_Mode
+ORDER BY Avg_Delay_Days;
+
+SELECT
+    Ship_Mode,
+    COUNT(*) AS Orders_Count,
+    ROUND(AVG(DATEDIFF(Ship_Date_latest, Order_Date_latest)),2) AS Avg_Delay_Days,
+    SUM(Sales) AS Total_Sales,
+    SUM(Profit) AS Total_Profit,
+    ROUND((SUM(Profit)/SUM(Sales))*100,2) AS Profit_Margin_Pct,
+    DENSE_RANK() OVER(
+        ORDER BY ROUND((SUM(Profit)/SUM(Sales))*100,2) DESC
+    ) AS Performance_Rank
+FROM orders
+GROUP BY Ship_Mode;
+
+SELECT COUNT(*) AS Missing_CustomerID
+FROM orders
+WHERE Customer_ID IS NULL
+   OR TRIM(Customer_ID) = '';
+   
+SELECT COUNT(*) AS Missing_Sales
+FROM orders
+WHERE Sales IS NULL;
+
+SELECT
+    Customer_ID,
+    Order_ID,
+    COUNT(*) AS Cnt
+FROM orders
+GROUP BY Customer_ID, Order_ID
+HAVING COUNT(*) > 1;
+
+SELECT count(*)
+FROM orders
+WHERE Sales < 0;
+
+SELECT count(*)
+FROM orders
+WHERE Order_Date_latest IS NULL;
+
+SELECT
+    COUNT(DISTINCT Customer_ID) AS Total_Customers,
+    COUNT(DISTINCT Order_ID) AS Total_Orders,
+    SUM(Sales) AS Total_Sales
+FROM orders;
+
+SELECT
+    Customer_ID,
+    Customer_Name,
+    COUNT(DISTINCT Order_ID) AS Total_Orders,
+    SUM(Sales) AS Total_Sales,
+    AVG(Sales) AS Avg_Order_Value,
+    MIN(Order_Date_latest) AS First_Order_Date,
+    MAX(Order_Date_latest) AS Last_Order_Date
+FROM orders
+GROUP BY Customer_ID, Customer_Name;
