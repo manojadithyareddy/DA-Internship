@@ -1,0 +1,27 @@
+ZenithRetail/
+│
+├── 📁 Dataset
+│   └── Superstore.csv
+│
+├── 📁 SQL
+│   ├── Data_Cleaning.sql
+│   ├── Business_Analysis.sql
+│   ├── RFM.sql
+│   └── Views.sql
+│
+├── 📁 Python
+│   └── ZenithRetail_EDA.ipynb
+│
+├── 📁 PowerBI
+│   └── ZenithRetail.pbix
+│
+├── 📁 Documentation
+│   ├── Technical_Architecture.pdf
+│   ├── Dashboard_Screenshots.png
+│   └── Project_Closure_Log.md
+│
+├── 📹 Dashboard_Walkthrough.mp4
+│
+├── 📄 README.md
+│
+└── LICENSE
